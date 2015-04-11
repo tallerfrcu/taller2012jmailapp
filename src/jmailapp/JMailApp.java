@@ -12,11 +12,12 @@ import modelo.Usuario;
  * @author Accornero, Fontana, García, Pascal
  */
 public class JMailApp {
+    private static Usuario u;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /**/
+        u = new Usuario(null, null, null)
     }
     
 }

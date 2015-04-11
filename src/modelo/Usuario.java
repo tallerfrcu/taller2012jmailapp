@@ -12,7 +12,7 @@ import java.util.List;
  * @author Accornero, Fontana, García, Pascal
  */
 public class Usuario {
-
+    
     /**
      * Variable de instancia que representa el nombre de usuario del Usuario. Se
      * utiliza para identificarse unívocamente en la aplicación.
@@ -48,15 +48,15 @@ public class Usuario {
     }
 
     /**
-     *
-     * @param nombreDeUsuario
+     * Método que inicializa el nombre de usuario
+     * @param nombreDeUsuario 
      */
     public void setNombreDeUsuario(String nombreDeUsuario) {
         this.nombreDeUsuario = nombreDeUsuario;
     }
 
     /**
-     *
+     * 
      * @param contrasenaUsuario
      */
     public void setContrasenaUsuario(String contrasenaUsuario) {
