@@ -3,20 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jmailapp;
-
-import modelo.Usuario;
+package modelo;
 
 /**
- *
+ * Clase que representa una cuenta de correo
  * @author Accornero, Fontana, García, Pascal
  */
-public class JMailApp {
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-
-    }
+public class CuentaDeCorreo {
     
 }
