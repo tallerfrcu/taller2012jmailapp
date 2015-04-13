@@ -5,7 +5,7 @@
  */
 package jmailapp;
 
-import modelo.Usuario;
+import GUI.LogIn;
 
 /**
  *
@@ -16,7 +16,8 @@ public class JMailApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /**/
+        LogIn ventanaLogIn = new LogIn();
+        ventanaLogIn.setVisible(true);
     }
     
 }
