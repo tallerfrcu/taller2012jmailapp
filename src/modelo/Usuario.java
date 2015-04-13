@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Clase que representa un usuario de la aplicación.
+ *
  * @author Accornero, Fontana, García, Pascal
  */
 public class Usuario {
@@ -29,63 +30,73 @@ public class Usuario {
     private List<CuentaDeCorreo> cuentasCorreo;
 
     /**
-     * Constructor de la clase que instacia un Usuario inicializando sus
-     * el nombre de usuario y la constraseña
+     * Constructor de la clase que instacia un Usuario asignando el
+     * nombre de usuario y la constraseña
+     *
      * @param nombreDeUsuario nombre de usuario del usuario
      * @param contrasenaUsuario contraseña del usuario
      */
-    public Usuario(String nombreDeUsuario, String contrasenaUsuario, 
-            List<CuentaDeCorreo> cuentasCorreo) {
+    public Usuario(String nombreDeUsuario, String contrasenaUsuario) {
         this.nombreDeUsuario = nombreDeUsuario;
         this.contrasenaUsuario = contrasenaUsuario;
     }
 
     /**
-     * Constructor de la clase que instancia un Usuario sin inicializar
-     * sus variables de instancia.
+     * Constructor de la clase que instancia un Usuario sin asignar sus
+     * variables de instancia.
      */
     public Usuario() {
     }
 
     /**
+     * Método que asigna el nombre de usuario
      *
-     * @param nombreDeUsuario
+     * @param nombreDeUsuario Nombre de usuario
      */
     public void setNombreDeUsuario(String nombreDeUsuario) {
         this.nombreDeUsuario = nombreDeUsuario;
     }
 
     /**
+     * Método que asigna la contraseña del usuario
      *
-     * @param contrasenaUsuario
+     * @param contrasenaUsuario Contraseña de usuario
      */
     public void setContrasenaUsuario(String contrasenaUsuario) {
         this.contrasenaUsuario = contrasenaUsuario;
     }
 
+    /**
+     * Método que incializa las cuentas de correo de un usuario
+     *
+     * @param cuentasCorreo Cuentas de correo
+     */
     public void setCuentasCorreo(List<CuentaDeCorreo> cuentasCorreo) {
         this.cuentasCorreo = cuentasCorreo;
     }
 
     /**
+     * Método que devuelve el nombre de usuario
      *
-     * @return
+     * @return Nombre de usuario
      */
     public String getNombreDeUsuario() {
         return nombreDeUsuario;
     }
 
     /**
+     * Método que devuelve la contraseña de usuario
      *
-     * @return
+     * @return Contraseña de usuario
      */
     public String getContrasenaUsuario() {
         return contrasenaUsuario;
     }
 
     /**
+     * Método que devuelve las cuentas de correo
      *
-     * @return
+     * @return Cuentas de correo
      */
     public List<CuentaDeCorreo> getCuentasCorreo() {
         return cuentasCorreo;
