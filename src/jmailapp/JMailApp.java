@@ -17,7 +17,7 @@ public class JMailApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        u = new Usuario(null, null, null)
+        u = new Usuario(, , );
     }
     
 }
