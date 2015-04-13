@@ -12,7 +12,6 @@ import GUI.LogIn;
  * @author Accornero, Fontana, García, Pascal
  */
 public class JMailApp {
-    private static Usuario u;
     /**
      * @param args the command line arguments
      */
