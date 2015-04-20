@@ -8,10 +8,12 @@ package persistencia.postgres;
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
 import Excepciones.ExcepcionErrorConexionBD;
 import Recursos.utilidades.DatosDeSesion;
+import Recursos.utilidades.PoolDeConexiones;
 import java.sql.Connection;
 import java.sql.SQLException;
 import persistencia.DAOFactory;
 import persistencia.IServicioCorreo;
+
 
 /**
  *
@@ -34,11 +36,14 @@ public class PostgresDAOFactory extends DAOFactory {
             ExcepcionArchivoDePropiedadesNoEncontrado {
         try {
             //se asigna el driver
-            Class.forName(DatosDeSesion.getDatosDeSesion().
-                    getPoolDeConexiones().getDriver());
+            PoolDeConexiones pool;
+            //pool = new PoolDeConexiones();
+            
+            pool = DatosDeSesion.getDatosDeSesion().getPoolDeConexiones();
+
+            Class cl = Class.forName(pool.getDriver());
             //se asigna la conexión
-            this.conexion = DatosDeSesion.getDatosDeSesion().
-                    getPoolDeConexiones().getDataSource().getConnection();
+            this.conexion = pool.getDataSource().getConnection();
         } catch (ClassNotFoundException ex) {
             throw new ExcepcionErrorConexionBD("Error al iniciar el driver de"
                     + " conexión a la base de datos", ex);

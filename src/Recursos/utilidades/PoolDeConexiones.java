@@ -45,6 +45,7 @@ public class PoolDeConexiones {
             this.dataSource = 
                     BasicDataSourceFactory.createDataSource(this.propiedades);
             this.driver = this.propiedades.getProperty("driver");
+            
         } catch (Exception ex) {
             throw new ExcepcionArchivoDePropiedadesNoEncontrado(ex);
         }
@@ -60,7 +61,8 @@ public class PoolDeConexiones {
             ExcepcionArchivoDePropiedadesNoEncontrado{
         try {
             FileInputStream f =new FileInputStream("C:/propiedadesPostgres.properties");
-            propiedades.load(f);
+            this.propiedades = new Properties();
+            this.propiedades.load(f);
         } catch (FileNotFoundException  ex) {
             throw new ExcepcionArchivoDePropiedadesNoEncontrado(ex);
         } catch (IOException ex) {
