@@ -26,7 +26,7 @@ public class LogIn extends JFrame {
     /**
      * Variable de clase que representa el tamaño por defecto de la ventana.
      */
-    private static final Dimension TAMANO_VENTANA = new Dimension(300, 500);
+    private static final Dimension TAMANO_VENTANA = new Dimension(300, 400);
     /**
      * label nombre de usuario
      */
@@ -90,12 +90,12 @@ public class LogIn extends JFrame {
         this.getContentPane().add(this.campoContrasena);
         this.getContentPane().add(this.botonLogIn);
         this.getContentPane().add(this.botonCrearCuenta);
-        this.labelUsuario.setBounds(10, 10, 100, 20);
-        this.campoUsuario.setBounds(10,30,100,20);
-        this.labelContrasena.setBounds(10, 50, 100, 20);
-        this.campoContrasena.setBounds(10,70,100,20);
-        this.botonLogIn.setBounds(10,90,150,25);
-        this.botonCrearCuenta.setBounds(10,120,150,25);
+        this.labelUsuario.setBounds(20, 70, 100, 20);
+        this.campoUsuario.setBounds(130,70,130,20);
+        this.labelContrasena.setBounds(20, 110, 100, 20);
+        this.campoContrasena.setBounds(130,110,130,20);
+        this.botonLogIn.setBounds(20,170,120,25);
+        this.botonCrearCuenta.setBounds(150,170,120,25);
         this.botonLogIn.addActionListener(new ActionListener() {
 
             @Override
@@ -104,5 +104,21 @@ public class LogIn extends JFrame {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         });
+        this.botonCrearCuenta.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                AltaUsuario ventanaAltaUsuario = new AltaUsuario(getThis());
+                ventanaAltaUsuario.setVisible(true);
+            }
+        });
+    }
+    /**
+     * Método que devuelve la instancia actual de la clase. Se utiliza 
+     * para pasar por parámetro el padre, a las ventanas hijas. 
+     * @return La instancia de LogIn
+     */
+    private LogIn getThis () {
+        return this;
     }
 }

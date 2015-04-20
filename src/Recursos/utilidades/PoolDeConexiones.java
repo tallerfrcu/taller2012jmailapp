@@ -59,7 +59,8 @@ public class PoolDeConexiones {
     private void inicializarPropiedades() throws 
             ExcepcionArchivoDePropiedadesNoEncontrado{
         try {
-            propiedades.load(new FileInputStream("propiedadesPostgres.properties"));
+            FileInputStream f =new FileInputStream("C:/propiedadesPostgres.properties");
+            propiedades.load(f);
         } catch (FileNotFoundException  ex) {
             throw new ExcepcionArchivoDePropiedadesNoEncontrado(ex);
         } catch (IOException ex) {

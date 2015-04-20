@@ -11,6 +11,7 @@ import Recursos.utilidades.DatosDeSesion;
 import java.sql.Connection;
 import java.sql.SQLException;
 import persistencia.DAOFactory;
+import persistencia.IServicioCorreo;
 
 /**
  *
@@ -60,6 +61,11 @@ public class PostgresDAOFactory extends DAOFactory {
             throw new ExcepcionErrorConexionBD("Error al cerrar la conexión "
                     + "a la base de datos ",ex );
         }
+    }
+
+    @Override
+    public IServicioCorreo getServicioCorreo() throws ExcepcionErrorConexionBD {
+        return new PostgresServicioCorreo(this.conexion);
     }
     
 }

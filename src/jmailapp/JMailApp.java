@@ -5,6 +5,7 @@
  */
 package jmailapp;
 
+import GUI.AltaUsuario;
 import GUI.LogIn;
 
 /**
