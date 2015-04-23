@@ -41,7 +41,7 @@ public class PostgresDAOFactory extends DAOFactory {
             
             pool = DatosDeSesion.getDatosDeSesion().getPoolDeConexiones();
 
-            Class cl = Class.forName(pool.getDriver());
+            Class.forName(pool.getDriver());
             //se asigna la conexión
             this.conexion = pool.getDataSource().getConnection();
         } catch (ClassNotFoundException ex) {
