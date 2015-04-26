@@ -60,7 +60,7 @@ public class PostgresServicioCorreo implements IServicioCorreo{
                 sCTemporal.setUrlServicioCorreo(
                         resultado.getString("url_servicio_correo"));
                 listaServiciosCorreo.add(sCTemporal);
-                resultado.next();
+                //resultado.next();
             }
         } catch(SQLException ex){
             throw new ExcepcionErrorConexionBD("Error al recuperar "
