@@ -9,7 +9,7 @@ package modelo;
  * Clase que representa un mail que fue recibido
  * @author Accornero, Fontana, García, Pascal
  */
-public class Recibido {
+public class Recepcion extends Mail {
     /**
      * Variable de instancia que representa el destino del mail
      */
@@ -71,7 +71,7 @@ public class Recibido {
      * @param origenMail
      * @param leido 
      */
-    public Recibido(CuentaDeCorreo destinoMail, String origenMail, boolean leido) {
+    public Recepcion(CuentaDeCorreo destinoMail, String origenMail, boolean leido) {
         this.destinoMail = destinoMail;
         this.origenMail = origenMail;
         this.leido = leido;
@@ -80,7 +80,7 @@ public class Recibido {
      * Constructor de la clase que instancia un mail recibido, sin asignar sus
      * variables de instancia
      */
-    public Recibido() {
+    public Recepcion() {
     }
     
     

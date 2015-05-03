@@ -15,6 +15,10 @@ public class CuentaDeCorreo {
      */
     private String nombreCuenta;
     /**
+     * Contraseña de la cuenta de correo
+     */
+    private String contrasenaCuenta;
+    /**
      * Variable de instancia que representa el servicio de correo
      */
     private ServicioCorreo servicio;
@@ -63,9 +67,18 @@ public class CuentaDeCorreo {
     public void setServicio(ServicioCorreo servicio) {
         this.servicio = servicio;
     }
-     
-   
-    
-    
-    
+    /**
+     * Método que asigna la contraseña de la cuenta de correo
+     * @param contrasenaCuenta contraseña de la cuenta de correo
+     */
+    public void setContrasenaCuenta(String contrasenaCuenta) {
+        this.contrasenaCuenta = contrasenaCuenta;
+    }
+    /**
+     * Método que devuelve la conraseña de correo de la cuenta
+     * @return contraseña de la cuenta de correo
+     */
+    public String getContrasenaCuenta() {
+        return contrasenaCuenta;
+    }
 }

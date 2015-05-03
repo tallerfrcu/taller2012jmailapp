@@ -26,28 +26,28 @@ public abstract class Mail {
      * Método que devuelve el asunto del mail
      * @return Asunto del mail
      */
-    protected String getAsuntoMail() {
+    public String getAsuntoMail() {
         return asuntoMail;
     }
     /**
      * Método que asigna el asunto del mail
      * @param asuntoMail Asunto del mail
      */
-    protected void setAsuntoMail(String asuntoMail) {
+    public void setAsuntoMail(String asuntoMail) {
         this.asuntoMail = asuntoMail;
     }
     /**
      * Método que devuelve el texto del mail
      * @return Texto del mail
      */
-    protected String getTextoMail() {
+    public String getTextoMail() {
         return textoMail;
     }
     /**
      * Método que asigna el texto del mail
      * @param textoMail Texto del mail
      */
-    protected void setTextoMail(String textoMail) {
+    public void setTextoMail(String textoMail) {
         this.textoMail = textoMail;
     }
     /**

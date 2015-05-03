@@ -46,7 +46,11 @@ public abstract class  DAOFactory {
      * si ocurre un error al desconectarse a la base de datos
      */
     public abstract void cerrarConexion() throws ExcepcionErrorConexionBD;
-    
+    /**
+     * 
+     * @return
+     * @throws ExcepcionErrorConexionBD 
+     */
     public abstract IServicioCorreo getServicioCorreo()
             throws ExcepcionErrorConexionBD;
 }

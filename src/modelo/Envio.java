@@ -9,7 +9,7 @@ package modelo;
  * Clase que representa a un mail enviado
  * @author Accornero, Fontana, García, Pascal
  */
-public class Enviado {
+public class Envio extends Mail {
     /**
      * Variable de instancia que representa el origen del mail
      */
@@ -53,7 +53,7 @@ public class Enviado {
      * @param origenMail
      * @param destinoMail 
      */
-    public Enviado(CuentaDeCorreo origenMail, String destinoMail) {
+    public Envio(CuentaDeCorreo origenMail, String destinoMail) {
         this.origenMail = origenMail;
         this.destinoMail = destinoMail;
     }
@@ -61,7 +61,7 @@ public class Enviado {
      * Constructor de la clase que instancia un mail enviado, sin inicializar 
      * sus variables de instancia
      */
-    public Enviado() {
+    public Envio() {
     }
     
     
