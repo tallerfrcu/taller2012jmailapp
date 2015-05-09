@@ -53,4 +53,5 @@ public abstract class  DAOFactory {
      */
     public abstract IServicioCorreo getServicioCorreo()
             throws ExcepcionErrorConexionBD;
+    public abstract ICorreos getCorreoDAO();
 }

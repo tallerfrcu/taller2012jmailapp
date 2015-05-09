@@ -12,6 +12,7 @@ import Recursos.utilidades.PoolDeConexiones;
 import java.sql.Connection;
 import java.sql.SQLException;
 import persistencia.DAOFactory;
+import persistencia.ICorreos;
 import persistencia.IServicioCorreo;
 
 
@@ -67,10 +68,22 @@ public class PostgresDAOFactory extends DAOFactory {
                     + "a la base de datos ",ex );
         }
     }
-
+    /**
+     * 
+     * @return
+     * @throws ExcepcionErrorConexionBD 
+     */
     @Override
     public IServicioCorreo getServicioCorreo() throws ExcepcionErrorConexionBD {
         return new PostgresServicioCorreo(this.conexion);
+    }
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public ICorreos getCorreoDAO() {
+        return new CorreosDAO(this.conexion);
     }
     
 }

@@ -11,5 +11,20 @@ package Excepciones;
  * @author Accornero, Fontana, García, Pascal
  */
 public class ExcepcionDeServiciosCorreo extends Exception {
-    
+    /**
+     * Constructor de la clase que instancia una excepción 
+     */
+    public ExcepcionDeServiciosCorreo(){
+        super();
+    }
+    /**
+     * Constructor de la clase que instancia una excepción de servicio de correo
+     * con un mensaje de error y la excepción original que provocó el error
+     * @param mensajeError mensaje de error
+     * @param exepcionOriginal excepción original
+     */
+    public ExcepcionDeServiciosCorreo(String mensajeError, 
+            Exception exepcionOriginal) {
+        super(mensajeError, exepcionOriginal);
+    }
 }

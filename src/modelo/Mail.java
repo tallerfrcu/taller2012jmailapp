@@ -5,11 +5,18 @@
  */
 package modelo;
 
+import java.sql.Timestamp;
+
 /**
  * Clase que representa un mail
  * @author Accornero, Fontana, García, Pascal
  */
 public abstract class Mail {
+    /**
+     * fecha del mail. Para el caso de Recepción es la fecha de recepción
+     * y para el caso de Envío es la fecha de envío
+     */
+    protected Timestamp fechaMail;
     /**
      * Variable de instancia que representa el asunto del mail
      */
@@ -63,6 +70,21 @@ public abstract class Mail {
      */
     public void setIdMail(int idMail) {
         this.idMail = idMail;
+    }
+    /**
+     * Método que asigna la fecha del mail. Para el caso de Recepción es la 
+     * fecha de envío y para el caso de Envío es la fecha de envío
+     * @param fechaMail fecha del mail.
+     */
+    public void setFechaMail(Timestamp fechaMail) {
+        this.fechaMail = fechaMail;
+    }
+    /**
+     * Método que devuelve la fecha del mail
+     * @return 
+     */
+    public Timestamp getFechaMail() {
+        return fechaMail;
     }
     
     

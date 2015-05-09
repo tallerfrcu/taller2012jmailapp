@@ -6,11 +6,14 @@
 package servicios;
 
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
+import Excepciones.ExcepcionDeServiciosCorreo;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -109,24 +112,16 @@ public class ServicioGMail implements IServiciosCorreo {
      * @return
      */
     @Override
-    public List<Recepcion> recibirCorreos(CuentaDeCorreo cuenta) {
-        //ArrayList<Recepcion> listaMails =  new ArrayList();
+    public List<Recepcion> recibirCorreos(CuentaDeCorreo cuenta) 
+            throws ExcepcionDeServiciosCorreo{
+        ArrayList<Recepcion> listaMails =  new ArrayList();
         try {
-            Properties prop = new Properties();
-            // Deshabilitamos TLS
-            prop.setProperty("mail.pop3.starttls.enable", "false");
-            prop.setProperty("mail.protocol.ssl.trust", "pop.gmail.com");
-            prop.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-            prop.setProperty("mail.pop3.socketFactory.fallback", "false");
-// Puerto 995 para conectarse.
-            prop.setProperty("mail.pop3.port", "995");
-            prop.setProperty("mail.pop3.socketFactory.port", "995");
-
             MailSSLSocketFactory socketFactory;
             socketFactory = new MailSSLSocketFactory();
+            socketFactory.setTrustedHosts(new String[] {"pop.gmail.com"});
             socketFactory.setTrustAllHosts(true);
             this.propiedadesGMail.put(
-                    "mail.pop3.socketFactory.class", socketFactory);
+                    "mail.pop3.socketFactory", socketFactory);
             Session sesion = Session.getInstance(this.propiedadesGMail);
             sesion.setDebug(false);
             Store store = sesion.getStore("pop3");
@@ -137,18 +132,30 @@ public class ServicioGMail implements IServiciosCorreo {
             folder.open(Folder.READ_ONLY);
             Message[] mensajes = folder.getMessages();
             for (byte i = 0; i < mensajes.length; i++) {
-                System.out.println("De: " + mensajes[i].getFrom()[i].toString());
-                System.out.println("Asunto: " + mensajes[i].getSubject());
+                Recepcion mailRecibido = new Recepcion();
+                mailRecibido.setOrigenMail(mensajes[i].getFrom()[i].toString());
+                mailRecibido.setDestinoMail(cuenta);
+                mailRecibido.setAsuntoMail(mensajes[i].getSubject());
+                mailRecibido.setFechaMail(
+                        new Timestamp(((MimeMessage)mensajes[i]).getSentDate().getTime()));
+                mailRecibido.setTextoMail((String)mensajes[i].getContent());
+                mailRecibido.setLeido(false);
+                listaMails.add(mailRecibido);
             }
         } catch (NoSuchProviderException ex) {
-            System.err.println("Error: " + ex.getMessage());
+            throw new ExcepcionDeServiciosCorreo(
+                    "Error al conectarse con la cuenta", ex);
         } catch (MessagingException ex) {
-            System.err.println("Error: " + ex.getMessage());
-            ex.printStackTrace(System.err);
+            throw new ExcepcionDeServiciosCorreo(
+                    "Error al recibir los mensajes", ex);
         } catch (GeneralSecurityException ex) {
-            Logger.getLogger(ServicioGMail.class.getName()).log(Level.SEVERE, null, ex);
+            throw new ExcepcionDeServiciosCorreo(
+                    "Error de seguridad al intentar recibir los correos", ex);
+        } catch (IOException ex) {
+            throw new ExcepcionDeServiciosCorreo(
+                    "Error al extraer el contenido del mail", ex);
         }
-        return null;
+        return listaMails;
     }
 
 }

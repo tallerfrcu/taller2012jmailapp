@@ -27,6 +27,9 @@ public interface IServiciosCorreo {
      * Méotodo que define la recepción de e-mails 
      * @param cuenta cuenta de correo de la que se quiere recibir los mails
      * @return lista de mails
+     * @throws Excepciones.ExcepcionDeServiciosCorreo excepción que se lanza
+     * si ocurre algún error de conectividad
      */
-    public List<Recepcion> recibirCorreos(CuentaDeCorreo cuenta);
+    public List<Recepcion> recibirCorreos(CuentaDeCorreo cuenta) 
+            throws Excepciones.ExcepcionDeServiciosCorreo;
 }
