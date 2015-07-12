@@ -7,7 +7,6 @@ package controladores;
 
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
 import Excepciones.ExcepcionDeServiciosCorreo;
-import java.util.ArrayList;
 import java.util.List;
 import modelo.CuentaDeCorreo;
 import modelo.Envio;

@@ -71,7 +71,9 @@ public class Recepcion extends Mail {
      * @param origenMail
      * @param leido 
      */
-    public Recepcion(CuentaDeCorreo destinoMail, String origenMail, boolean leido) {
+    public Recepcion(CuentaDeCorreo destinoMail, 
+            String origenMail, boolean leido) {
+        super();
         this.destinoMail = destinoMail;
         this.origenMail = origenMail;
         this.leido = leido;
@@ -81,6 +83,26 @@ public class Recepcion extends Mail {
      * variables de instancia
      */
     public Recepcion() {
+        super();
+    }
+    /**
+     * Implementación de método que devuelve el origen del mail en formato 
+     * String
+     * @return origen del mail en formato String
+     */
+    @Override
+    public String getOrigen() {
+        return this.origenMail;
+    }
+    /**
+     * Implementación de método que devuelve el destino del mail en formato 
+     * String
+     * @return destino del mail en formato String
+     */
+    @Override
+    public String getDestino() {
+        return this.destinoMail.getNombreCuenta() + 
+                this.destinoMail.getServicio().getUrlServicioCorreo();
     }
     
     

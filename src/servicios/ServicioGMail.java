@@ -7,6 +7,8 @@ package servicios;
 
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
 import Excepciones.ExcepcionDeServiciosCorreo;
+import Excepciones.ExcepcionTratamientoCorreo;
+import Recursos.utilidades.TratamientoDeCorreo;
 import com.sun.mail.util.MailSSLSocketFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -133,12 +135,13 @@ public class ServicioGMail implements IServiciosCorreo {
             Message[] mensajes = folder.getMessages();
             for (byte i = 0; i < mensajes.length; i++) {
                 Recepcion mailRecibido = new Recepcion();
-                mailRecibido.setOrigenMail(mensajes[i].getFrom()[i].toString());
+                mailRecibido.setOrigenMail(mensajes[i].getFrom()[0].toString());
                 mailRecibido.setDestinoMail(cuenta);
                 mailRecibido.setAsuntoMail(mensajes[i].getSubject());
                 mailRecibido.setFechaMail(
                         new Timestamp(((MimeMessage)mensajes[i]).getSentDate().getTime()));
-                mailRecibido.setTextoMail((String)mensajes[i].getContent());
+                String chingo = TratamientoDeCorreo.getCuerpoMensaje(mensajes[i]);
+                mailRecibido.setTextoMail(chingo);
                 mailRecibido.setLeido(false);
                 listaMails.add(mailRecibido);
             }
@@ -151,7 +154,7 @@ public class ServicioGMail implements IServiciosCorreo {
         } catch (GeneralSecurityException ex) {
             throw new ExcepcionDeServiciosCorreo(
                     "Error de seguridad al intentar recibir los correos", ex);
-        } catch (IOException ex) {
+        } catch (ExcepcionTratamientoCorreo ex) {
             throw new ExcepcionDeServiciosCorreo(
                     "Error al extraer el contenido del mail", ex);
         }

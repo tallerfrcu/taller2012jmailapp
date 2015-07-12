@@ -14,7 +14,7 @@ import modelo.ServicioCorreo;
  * los datos referentes a los servicio de correo
  * @author Accornero, Fontana, García, Pascal
  */
-public interface IServicioCorreo {
+public interface IServicioCorreoDAO {
     public List<ServicioCorreo> getServiciosCorreo() throws 
             ExcepcionErrorConexionBD;
 }

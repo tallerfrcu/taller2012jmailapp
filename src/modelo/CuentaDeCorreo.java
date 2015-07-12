@@ -81,4 +81,13 @@ public class CuentaDeCorreo {
     public String getContrasenaCuenta() {
         return contrasenaCuenta;
     }
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public String toString() {
+        return this.nombreCuenta + this.servicio.getUrlServicioCorreo();
+    }
+    
 }

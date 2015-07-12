@@ -5,24 +5,30 @@
  */
 package GUI;
 
+import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
+import Excepciones.ExcepcionErrorConexionBD;
+import Excepciones.ExcepcionLogIn;
+import controladores.ControladorDeFachada;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javafx.scene.input.KeyCode;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 /**
  * Clase que representa una ventana de logueo a la aplicación
+ *
  * @author Accornero, Fontana, García, Pascal
  */
 public class LogIn extends JFrame {
+
     /**
      * Variable de clase que representa el tamaño por defecto de la ventana.
      */
@@ -52,6 +58,13 @@ public class LogIn extends JFrame {
      */
     private JButton botonCrearCuenta;
     /**
+     * Instancia de {@link controladores.ControladorDeFachada
+     * ControladorDeFachada} que se utiliza para conectarse con las capas
+     * inferiores de la aplicación
+     */
+    private ControladorDeFachada controladorDeFachada;
+
+    /**
      * Constructor de la clase que inicializa la ventana, instanciando sus
      * variables de instancia y componentes.
      */
@@ -59,25 +72,28 @@ public class LogIn extends JFrame {
         //Llamo al constructor de la super clase JFrame, e instancio la
         //ventana con un título
         super("Log In");
+        this.controladorDeFachada = new ControladorDeFachada();
         this.configuracionBasicaVentana();
         this.inicializarComponentes();
     }
+
     /**
-     * método privado que inicializa la configuración básica de la ventana.
-     * Se utiliza en el constructor.
+     * método privado que inicializa la configuración básica de la ventana. Se
+     * utiliza en el constructor.
      */
-    private void configuracionBasicaVentana(){
+    private void configuracionBasicaVentana() {
         this.setSize(TAMANO_VENTANA);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setLayout(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+
     /**
      * método privado que inicializa los componentes de la ventana y los ubica
      * en la misma. Se utiliza en el constructor.
      */
-    private void inicializarComponentes(){
+    private void inicializarComponentes() {
         this.labelUsuario = new JLabel("USUARIO");
         this.labelContrasena = new JLabel("CONTRASEÑA");
         this.campoUsuario = new JTextField();
@@ -91,17 +107,15 @@ public class LogIn extends JFrame {
         this.getContentPane().add(this.botonLogIn);
         this.getContentPane().add(this.botonCrearCuenta);
         this.labelUsuario.setBounds(20, 70, 100, 20);
-        this.campoUsuario.setBounds(130,70,130,20);
+        this.campoUsuario.setBounds(130, 70, 130, 20);
         this.labelContrasena.setBounds(20, 110, 100, 20);
-        this.campoContrasena.setBounds(130,110,130,20);
-        this.botonLogIn.setBounds(20,170,120,25);
-        this.botonCrearCuenta.setBounds(150,170,120,25);
+        this.campoContrasena.setBounds(130, 110, 130, 20);
+        this.botonLogIn.setBounds(20, 170, 120, 25);
+        this.botonCrearCuenta.setBounds(150, 170, 120, 25);
         this.botonLogIn.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(rootPane, "El botón anda", "chingo", 
-                        JOptionPane.INFORMATION_MESSAGE);
+                loguear();
             }
         });
         this.botonCrearCuenta.addActionListener(new ActionListener() {
@@ -112,13 +126,56 @@ public class LogIn extends JFrame {
                 ventanaAltaUsuario.setVisible(true);
             }
         });
+        this.campoContrasena.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    loguear();
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent ke) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent ke) {
+            }
+        });
     }
+
     /**
-     * Método que devuelve la instancia actual de la clase. Se utiliza 
-     * para pasar por parámetro el padre, a las ventanas hijas. 
+     * Método que devuelve la instancia actual de la clase. Se utiliza para
+     * pasar por parámetro el padre, a las ventanas hijas.
      * @return La instancia de LogIn
      */
-    private LogIn getThis () {
+    private LogIn getThis() {
         return this;
+    }
+
+    /**
+     * Métood privado que se encarga de llamar a la función de login y verifica
+     * que sea exitoso. De ser así, abre la ventana principal
+     */
+    private void loguear() {
+        try {
+            if (controladorDeFachada.loguinUsuario(
+                    campoUsuario.getText(), String.valueOf(
+                            campoContrasena.getPassword()))) {
+                GUIPrincipal ventanaPrincipal = new GUIPrincipal();
+                //dispose();
+                ventanaPrincipal.setVisible(true);
+            }
+        } catch (ExcepcionErrorConexionBD ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(),
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        } catch (ExcepcionArchivoDePropiedadesNoEncontrado ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(),
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        } catch (ExcepcionLogIn ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(),
+                    "Error", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }

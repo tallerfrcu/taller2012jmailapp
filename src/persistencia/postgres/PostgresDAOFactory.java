@@ -11,9 +11,11 @@ import Recursos.utilidades.DatosDeSesion;
 import Recursos.utilidades.PoolDeConexiones;
 import java.sql.Connection;
 import java.sql.SQLException;
+import modelo.Usuario;
 import persistencia.DAOFactory;
-import persistencia.ICorreos;
-import persistencia.IServicioCorreo;
+import persistencia.ICorreoDAO;
+import persistencia.IServicioCorreoDAO;
+import persistencia.IUsuarioDAO;
 
 
 /**
@@ -74,16 +76,33 @@ public class PostgresDAOFactory extends DAOFactory {
      * @throws ExcepcionErrorConexionBD 
      */
     @Override
-    public IServicioCorreo getServicioCorreo() throws ExcepcionErrorConexionBD {
+    public IServicioCorreoDAO getServicioCorreo() throws ExcepcionErrorConexionBD {
         return new PostgresServicioCorreo(this.conexion);
     }
     /**
-     * 
-     * @return 
+     * Método que devuele una instancia de 
+     * {@link persistencia.postgres.PostgresCorreoDAO PostgresCorreoDAO} que permite tratar
+     * los correos contra los servidores de correos configurados en la 
+     * aplicación
+     * @return instancia de {@link persistencia.postgres.PostgresCorreoDAO PostgresCorreoDAO}
      */
     @Override
-    public ICorreos getCorreoDAO() {
-        return new CorreosDAO(this.conexion);
+    public ICorreoDAO getCorreoDAO() {
+        return new PostgresCorreoDAO(this.conexion);
+    }
+    /**
+     * Método que devuelve una instancia de 
+     * {@link persistencia.postgres.PostgresDAOFactory PostgresUsuarioDAO}, 
+     * que permite tratar los usuarios contra la base de datos local. 
+     * Instancia un objeto 
+     * {@link persistencia.postgres.PostgresDAOFactory PostgresUsuarioDAO} 
+     * con la conexión a la base de datos.
+     * @return instancia de 
+     * {@link persistencia.postgres.PostgresDAOFactory PostgresUsuarioDAO}
+     */
+    @Override
+    public IUsuarioDAO getUsuarioDAO() {
+        return new PostgresUsuarioDAO(this.conexion);
     }
     
 }

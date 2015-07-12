@@ -6,18 +6,34 @@
 package GUI;
 
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
+import Excepciones.ExcepcionErrorConexionBD;
 import controladores.ControladorDeFachada;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.CuentaDeCorreo;
+import modelo.Envio;
 
 /**
  *
  * @author Accornero, Fontana, García, Pascal
  */
 public class GUIEnviarCorreo extends javax.swing.JDialog {
-
+    /**
+     * instancia del controlador de fachada
+     */
+    private ControladorDeFachada controladorDeFachada;
+    /**
+     * variable booleana que indica si el correo se guardó correctamente.
+     * Se utiliza para indicarle a la GUIPrincipal que se guardó el correo
+     * y hay que enviarlo.
+     */
+    private boolean correoEnviado = false;
+    /**
+     * Id del correo que se envió
+     */
+    private int idCorreoEnviado = 0;
     /**
      * Creates new form GUIEnviarCorreo
      */
@@ -26,6 +42,9 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.cuentaEnvio = cuentaEnvio;
+        this.controladorDeFachada = new ControladorDeFachada();
+        this.campoOrigen.setText(this.cuentaEnvio.getNombreCuenta() + 
+                this.cuentaEnvio.getServicio().getUrlServicioCorreo());
     }
     /**
      * instancia de la cuenta de correo de la que se está enviando
@@ -51,8 +70,8 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         panelTexto = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        campoCuerpoMail = new javax.swing.JTextArea();
+        btnEnviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -118,9 +137,9 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
                 .addGap(32, 32, 32))
         );
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        campoCuerpoMail.setColumns(20);
+        campoCuerpoMail.setRows(5);
+        jScrollPane1.setViewportView(campoCuerpoMail);
 
         javax.swing.GroupLayout panelTextoLayout = new javax.swing.GroupLayout(panelTexto);
         panelTexto.setLayout(panelTextoLayout);
@@ -139,10 +158,10 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton2.setText("Enviar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnEnviar.setText("Enviar");
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnEnviarActionPerformed(evt);
             }
         });
 
@@ -155,7 +174,7 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jButton2)
+                        .addComponent(btnEnviar)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,42 +192,64 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(panelTexto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(btnEnviar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ControladorDeFachada controladorDeFachada = 
-                new ControladorDeFachada();
+    /**
+     * 
+     * @param evt 
+     */
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
         try {
-            controladorDeFachada.enviarCorreo(this.cuentaEnvio, this.campoDestino.getText(),
-                    this.campoAsunto.getText(), this.jTextArea1.getText());
-        } catch (ExcepcionArchivoDePropiedadesNoEncontrado ex) {
+            String destinoTemp = this.campoDestino.getText();
+            Timestamp fechaTemp = new Timestamp(new java.util.Date().getTime());
+            Envio mail = new Envio();
+            mail.setAsuntoMail(this.campoAsunto.getText());
+            mail.setDestinoMail(destinoTemp);
+            mail.setFechaMail(fechaTemp);
+            mail.setEnviado(false);
+            mail.setOrigenMail(cuentaEnvio);
+            mail.setTextoMail(this.campoCuerpoMail.getText());
+            boolean aa = this.controladorDeFachada.guardarCorreoEnvio(mail);
+            this.idCorreoEnviado = this.controladorDeFachada.getIdMail(destinoTemp, fechaTemp);
+            this.correoEnviado = true;
+            this.setVisible(false);
+        } catch (ExcepcionErrorConexionBD | ExcepcionArchivoDePropiedadesNoEncontrado ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(),
                     "Error",JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
-
+    }//GEN-LAST:event_btnEnviarActionPerformed
+    /**
+     * Método que devuelve true si el correo se guardó correctamente o false
+     * si no se guardó ningún correo
+     * @return true si se guardó el correo, false en caso contrario
+     */
+    public boolean getCorreoEnviado(){
+        return this.correoEnviado;
+    }
+    public int getIdCorreoEnviado(){
+        return this.idCorreoEnviado;
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEnviar;
     private javax.swing.JTextField campoAsunto;
+    private javax.swing.JTextArea campoCuerpoMail;
     private javax.swing.JTextField campoDestino;
     private javax.swing.JTextField campoOrigen;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel panelDatosEnvio;
     private javax.swing.JPanel panelTexto;
     // End of variables declaration//GEN-END:variables

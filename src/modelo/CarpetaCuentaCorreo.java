@@ -5,6 +5,7 @@
  */
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * que contiene una lista de mails. 
  * @author Accornero, Fontana, García, Pascal
  */
-public class CarpetaUsuario {
+public class CarpetaCuentaCorreo {
     /**
      * id único de la carpeta
      */
@@ -30,10 +31,11 @@ public class CarpetaUsuario {
      */
     private List<Mail> listaMails;
     /**
-     * Constructor de la clase que instancia una carpeta sin inicializar
-     * ninguna de sus variables de instancia
+     * Constructor de la clase que instancia una carpeta instanciando una lista
+     * vacía de mails.
      */
-    public CarpetaUsuario() {
+    public CarpetaCuentaCorreo() {
+        this.listaMails = new ArrayList<>();
     }
     /**
      * Constructor de la clase que instancia una carpeta inicializando
@@ -43,7 +45,8 @@ public class CarpetaUsuario {
      * @param cuentaDeCorreo cuenta de correo a la que está asociada la carpeta
      * @param listaMails lista de mails de la carpeta
      */
-    public CarpetaUsuario(int idCarpeta, String nombreCarpeta, CuentaDeCorreo cuentaDeCorreo, List<Mail> listaMails) {
+    public CarpetaCuentaCorreo(int idCarpeta, String nombreCarpeta, 
+            CuentaDeCorreo cuentaDeCorreo, List<Mail> listaMails) {
         this.idCarpeta = idCarpeta;
         this.nombreCarpeta = nombreCarpeta;
         this.cuentaDeCorreo = cuentaDeCorreo;
@@ -104,6 +107,11 @@ public class CarpetaUsuario {
      */
     public void setListaMails(List<Mail> listaMails) {
         this.listaMails = listaMails;
+    }
+
+    @Override
+    public String toString() {
+        return this.nombreCarpeta;
     }
     
 }

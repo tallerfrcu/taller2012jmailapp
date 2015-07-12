@@ -51,7 +51,16 @@ public abstract class  DAOFactory {
      * @return
      * @throws ExcepcionErrorConexionBD 
      */
-    public abstract IServicioCorreo getServicioCorreo()
+    public abstract IServicioCorreoDAO getServicioCorreo()
             throws ExcepcionErrorConexionBD;
-    public abstract ICorreos getCorreoDAO();
+    /**
+     * 
+     * @return 
+     */
+    public abstract ICorreoDAO getCorreoDAO();
+    /**
+     * definición del método que devuelve una instancia de UsuarioDAO
+     * @return 
+     */
+    public abstract IUsuarioDAO getUsuarioDAO();
 }

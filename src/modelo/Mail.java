@@ -86,8 +86,14 @@ public abstract class Mail {
     public Timestamp getFechaMail() {
         return fechaMail;
     }
-    
-    
-    
-    
+    /**
+     * Definición de método que devuelve el origen del mail en formato String
+     * @return origen del mail
+     */
+    public abstract String getOrigen();
+    /**
+     * Definición de método que devuelve el destino en formato String
+     * @return destino del mail
+     */
+    public abstract String getDestino();    
 }

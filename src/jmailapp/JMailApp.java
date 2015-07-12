@@ -18,10 +18,10 @@ public class JMailApp {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //LogIn ventanaLogIn = new LogIn();
-        //ventanaLogIn.setVisible(true);
-        GUIPrincipal v = new GUIPrincipal();
-        v.setVisible(true);
+        LogIn ventanaLogIn = new LogIn();
+        ventanaLogIn.setVisible(true);
+        //GUIPrincipal v = new GUIPrincipal();
+        //v.setVisible(true);
     }
     
 }

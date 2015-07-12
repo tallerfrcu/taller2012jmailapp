@@ -16,8 +16,9 @@ import java.util.logging.Logger;
 import modelo.CuentaDeCorreo;
 import modelo.ServicioCorreo;
 import persistencia.DAOFactory;
-import persistencia.ICorreos;
-import persistencia.IServicioCorreo;
+import persistencia.ICorreoDAO;
+import persistencia.IServicioCorreoDAO;
+import persistencia.postgres.PostgresDAOFactory;
 
 /**
  * Clase que representa un controlador que posee las responsabilidades asociadas
@@ -55,7 +56,7 @@ public class ControladorDeBaseDeDatos {
         try {
             DAOFactory factory = DAOFactory.getDAOFactory();
             factory.iniciarConexion();
-            IServicioCorreo servicioCorreo = factory.getServicioCorreo();
+            IServicioCorreoDAO servicioCorreo = factory.getServicioCorreo();
             List<ServicioCorreo> listaServicioCorreo
                     = servicioCorreo.getServiciosCorreo();
             factory.cerrarConexion();
@@ -86,14 +87,15 @@ public class ControladorDeBaseDeDatos {
         ArrayList listaMails
                 = (ArrayList) this.controladorDeServicios.
                 recibirCorreos(cuenta);
-        try {
+        //try {
             DAOFactory factory = DAOFactory.getDAOFactory();
             factory.iniciarConexion();
-            ICorreos correosDAO = factory.getCorreoDAO();
-            return correosDAO.guardarCorreosRecibidos(listaMails);
-        } finally {
-            DAOFactory.getDAOFactory().cerrarConexion();
-        }
+            ICorreoDAO correosDAO = factory.getCorreoDAO();
+            boolean b = correosDAO.guardarCorreosRecibidos(listaMails);
+            factory.cerrarConexion();
+           return b;
+            //DAOFactory.getDAOFactory().cerrarConexion();
+        //}
 
     }
 }

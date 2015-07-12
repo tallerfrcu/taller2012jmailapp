@@ -5,6 +5,7 @@
  */
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,10 +43,12 @@ public class Usuario {
     }
 
     /**
-     * Constructor de la clase que instancia un Usuario sin asignar sus
-     * variables de instancia.
+     * Constructor de la clase que instancia un Usuario instanciado la lista de
+     * correos, pero sin agregar ninguna instancia de {@link 
+     * modelo.CuentaDeCorreo CuentaDeCorreo} a la lista
      */
     public Usuario() {
+        this.cuentasCorreo = new ArrayList<>();
     }
 
     /**

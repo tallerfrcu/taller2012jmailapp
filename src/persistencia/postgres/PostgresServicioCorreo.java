@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.ServicioCorreo;
-import persistencia.IServicioCorreo;
+import persistencia.IServicioCorreoDAO;
 
 /**
  * Clase que representa los servicios de conexión a la base de datos para los
@@ -21,7 +21,7 @@ import persistencia.IServicioCorreo;
  * correo
  * @author Accornero, Fontana, García, Pascal
  */
-public class PostgresServicioCorreo implements IServicioCorreo{
+public class PostgresServicioCorreo implements IServicioCorreoDAO{
     /**
      * instancia de conexión a la base de datos
      */
