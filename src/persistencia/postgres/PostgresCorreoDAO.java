@@ -72,7 +72,10 @@ public class PostgresCorreoDAO implements ICorreoDAO {
      * String utilizado para obtener un mail a partir de un ID
      */
     private String sqlSelectMailPorID;
-
+    /**
+     * String de inserción en la tabla de relación entre el mail y la carpeta
+     */
+    private String sqlInsertCarpetaMail;
     /**
      * Constructor de la clase que instancia CooreosDAO con una instancia de la
      * conexión a la base de datos. También se inicializan las cadenas de
@@ -138,7 +141,12 @@ public class PostgresCorreoDAO implements ICorreoDAO {
                 + "recepcion.id_servicio_correo or "
                 + "sc.id_servicio_correo= envio.id_servicio_correo "
                 + "where mail.id_mail = ?";
-
+        this.sqlInsertCarpetaMail = "insert into carpeta_cuenta_correo_mail"
+                + "(select id_carpeta,? "
+                + "from carpeta_cuenta_correo "
+                + "where nombre_cuenta like '?' "
+                + "and id_servicio_correo = ? "
+                + "and nombre_carpeta like 'Bandeja de Salida')";
     }
 
     /**
@@ -337,7 +345,7 @@ public class PostgresCorreoDAO implements ICorreoDAO {
         try {
             String strCuenta
                     = carpeta.getCuentaDeCorreo().getNombreCuenta()
-                    + carpeta.getCuentaDeCorreo().getServicio().getIdServicioCorreo();
+                    + carpeta.getCuentaDeCorreo().getServicio().getUrlServicioCorreo();
             PreparedStatement sentenciaSQL
                     = this.conexion.prepareStatement(this.sqlSelectMails);
             ResultSet rs;
@@ -346,13 +354,12 @@ public class PostgresCorreoDAO implements ICorreoDAO {
             rs = sentenciaSQL.executeQuery();
             while (rs.next()) {
                 Mail mail = null;
-                if (rs.getString("origen") == null ? strCuenta == null
-                        : rs.getString("origen").equals(strCuenta)) {
+                if (rs.getString("origen").equals(strCuenta)) {
                     Envio mailEnvio = new Envio();
                     mailEnvio.setDestinoMail(rs.getString("destino"));
                     mailEnvio.setOrigenMail(carpeta.getCuentaDeCorreo());
                     mail = mailEnvio;
-                } else if (!rs.getString("destino").equals(strCuenta)) {
+                } else if (rs.getString("destino").equals(strCuenta)) {
                     Recepcion mailRecepcion = new Recepcion();
                     mailRecepcion.setDestinoMail(carpeta.getCuentaDeCorreo());
                     mailRecepcion.setOrigenMail(rs.getString("origen"));
@@ -389,6 +396,8 @@ public class PostgresCorreoDAO implements ICorreoDAO {
                     = this.conexion.prepareStatement(this.sqlInsertMailEnvio);
             PreparedStatement stGetNexValMail
                     = this.conexion.prepareStatement(this.sqlGetNextValMail);
+            PreparedStatement stInsertCarpetaMail 
+                    = this.conexion.prepareStatement(this.sqlInsertCarpetaMail);
             int idMail;
             ResultSet rsNexValMail
                     = stGetNexValMail.executeQuery();
@@ -407,9 +416,13 @@ public class PostgresCorreoDAO implements ICorreoDAO {
             stInsertEnvio.setInt(3, mailEnvio.getOrigenMail().getServicio().getIdServicioCorreo());
             stInsertEnvio.setString(4, mailEnvio.getDestino());
             stInsertEnvio.setBoolean(5, false);
+            stInsertCarpetaMail.setInt(1, idMail);
+            stInsertCarpetaMail.setString(2, mailEnvio.getOrigenMail().getNombreCuenta());
+            stInsertCarpetaMail.setInt(3, mailEnvio.getOrigenMail().getServicio().getIdServicioCorreo());
             this.conexion.setAutoCommit(false);
             stInsertMail.executeUpdate();
             stInsertEnvio.executeUpdate();
+            stInsertCarpetaMail.executeUpdate();
             this.conexion.commit();
         } catch (SQLException ex) {
             try {

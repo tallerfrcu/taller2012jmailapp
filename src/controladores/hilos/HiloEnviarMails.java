@@ -27,6 +27,12 @@ public class HiloEnviarMails implements Runnable {
      * mail que envía el hilo
      */
     private Envio mailEnvio;
+    /**
+     * Constructor de la clase que instancia un HiloEnviarMails instanciando el 
+     * mail a enviar con una instancia de {@link modelo.Envio Envio} pasado 
+     * por parámetro
+     * @param mailEnvio mail a enviar
+     */
     public HiloEnviarMails(Envio mailEnvio){
         this.mailEnvio = mailEnvio;
     }

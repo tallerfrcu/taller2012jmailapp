@@ -62,6 +62,7 @@ public class DatosDeSesion {
      * método que loguea al usuario guardándolo en la variable de instancia
      * usuarioLogueado.
      * @param usuarioLogIn usuario que se loguea a la aplicación
+     * @throws Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado
      */
     public void logInUsuario(Usuario usuarioLogIn) 
             throws ExcepcionArchivoDePropiedadesNoEncontrado{

@@ -5,18 +5,22 @@
  */
 package GUI;
 
+import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
+import Excepciones.ExcepcionErrorConexionBD;
+import Recursos.utilidades.Validador;
+import controladores.ControladorDeFachada;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 /**
@@ -25,7 +29,7 @@ import javax.swing.JTextField;
  */
 public class AltaUsuario extends JDialog {
     
-    private static final Dimension TAMANO_VENTANA = new Dimension(300, 400);
+    private static final Dimension TAMANO_VENTANA = new Dimension(300, 250);
     /**
      * label nombre de usuario
      */
@@ -35,6 +39,10 @@ public class AltaUsuario extends JDialog {
      */
     private JLabel labelContrasena;
     /**
+     * label repetir contraseña
+     */
+    private JLabel labelRepetirContrasena;
+    /**
      * Campo de texto para ingresar el nombre de usuario
      */
     private JTextField campoUsuario;
@@ -43,13 +51,9 @@ public class AltaUsuario extends JDialog {
      */
     private JPasswordField campoContrasena;
     /**
-     * Botón que indica donde el usuario debe agregar sus cuentas de correo
+     * Campo de texto para reingresar la contraseña
      */
-    private JButton botonAgregarCuentaDeCorreo;
-    /**
-     * Lista que representa las cuentas de correo del usuario
-     */
-    private JList listaCuentasDeCorreo;
+    private JPasswordField campoRepetirContrasena;
     /**
      * Botón que indica aceptar la acción
      */
@@ -58,11 +62,21 @@ public class AltaUsuario extends JDialog {
      * Botón que indica cancelar la acción
      */
     private JButton botonCancelar;
+    /**
+     * Instancia del validador
+     */
+    private final Validador validador;
+    /**
+     * Instancia del controlador de fachada
+     */
+    private final ControladorDeFachada controlador;
     
         public AltaUsuario(LogIn ventanaLogIn) {
         //Llamo al constructor de la super clase JFrame, e instancio la
         //ventana con un título
         super(ventanaLogIn, "Alta Usuario",JDialog.DEFAULT_MODALITY_TYPE);
+        this.validador = new Validador();
+        this.controlador = new ControladorDeFachada();
         this.configuracionBasicaVentana();
         this.inicializarComponentes();
     }
@@ -80,40 +94,84 @@ public class AltaUsuario extends JDialog {
     }
     
     private void inicializarComponentes(){
-        this.labelUsuario = new JLabel("NOMBRE DE USUARIO");
-        this.labelContrasena = new JLabel("CONTRASEÑA");
+        this.labelUsuario = new JLabel("Nombre de usuario");
+        this.labelContrasena = new JLabel("Contraseña");
+        this.labelRepetirContrasena = new JLabel("Repetir contraseña");
         this.campoUsuario = new JTextField();
         this.campoContrasena = new JPasswordField();
-        this.botonAgregarCuentaDeCorreo = new JButton("Agregar Cuenta de Correo");
+        this.campoRepetirContrasena = new JPasswordField();
         this.botonAceptar = new JButton("Aceptar");
         this.botonCancelar = new JButton("Cancelar");
-        this.listaCuentasDeCorreo = new JList();
         this.getContentPane().add(this.labelUsuario);
         this.getContentPane().add(this.campoUsuario);
         this.getContentPane().add(this.labelContrasena);
         this.getContentPane().add(this.campoContrasena);
-        this.getContentPane().add(this.botonAgregarCuentaDeCorreo);
+        this.getContentPane().add(this.labelRepetirContrasena);
+        this.getContentPane().add(this.campoRepetirContrasena);
         this.getContentPane().add(this.botonAceptar);
         this.getContentPane().add(this.botonCancelar);
-        this.getContentPane().add(this.listaCuentasDeCorreo);
-        this.listaCuentasDeCorreo.setBounds(50,150, 200, 150);
         this.labelUsuario.setBounds(10, 20, 140, 20);
-        this.campoUsuario.setBounds(140,20,110,20);
+        this.campoUsuario.setBounds(160,20,110,20);
         this.labelContrasena.setBounds(10, 60, 100, 20);
-        this.campoContrasena.setBounds(140,60,110,20);
-        this.botonAgregarCuentaDeCorreo.setBounds(50,110,200,30);
-        this.botonAceptar.setBounds(10,320,130,25);
-        this.botonCancelar.setBounds(150,320,130,25);
-        this.botonAgregarCuentaDeCorreo.addActionListener(new ActionListener() {
+        this.campoContrasena.setBounds(160,60,110,20);
+        this.labelRepetirContrasena.setBounds(10, 100, 120, 20);
+        this.campoRepetirContrasena.setBounds(160, 100, 110, 20);
+        this.botonAceptar.setBounds(10,180,130,25);
+        this.botonCancelar.setBounds(150,180,130,25);
+        this.botonCancelar.addActionListener((ActionEvent ae) -> {
+            dispose();
+        });
+        this.botonAceptar.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
-              GUICuentaDeCorreo ventanaCuentaCorreo = new GUICuentaDeCorreo(getThis());
-                ventanaCuentaCorreo.setVisible(true);
+                ArrayList<JTextField> camposAValidar = new ArrayList<>();
+                camposAValidar.add(campoUsuario);
+                camposAValidar.add(campoContrasena);
+                camposAValidar.add(campoRepetirContrasena);
+                ArrayList camposInalidos =
+                        (ArrayList) validador.validarDatosObligatorios(camposAValidar);
+                if (camposInalidos.isEmpty()) {
+                    if(validador.validarContraseñas(String.valueOf(
+                            campoContrasena.getPassword()) ,
+                            String.valueOf(campoRepetirContrasena.getPassword()))){
+                        try {
+                            controlador.generarUsuario(campoUsuario.getText(),
+                                    String.valueOf(campoRepetirContrasena.getPassword()));
+                            JOptionPane.showMessageDialog(null,
+                                    "¡Usuario creado con éxito!",
+                                    "Alta de Usuario",
+                                    JOptionPane.INFORMATION_MESSAGE,
+                                    (new ImageIcon(getClass().
+                                            getResource("/Recursos/imagenes/check.gif"))));
+                            dispose();
+                        } catch (ExcepcionErrorConexionBD |
+                                ExcepcionArchivoDePropiedadesNoEncontrado ex) {
+                            JOptionPane.showMessageDialog(null, ex.getMessage()
+                                    , "Error", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No Coinciden las "
+                                + "contraseñas", "Alta de Usuario",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    Iterator iterador = camposInalidos.iterator();
+                    while(iterador.hasNext()) {
+                        JTextField campoInvalido = (JTextField) iterador.next();
+                        campoInvalido.setBorder(BorderFactory.createLineBorder(Color.red));
+                    }
+                    JOptionPane.showMessageDialog(null, "Los campos marcados "
+                            + "con rojo son obligatorios", "Alta de Usuario",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
             }
-        });    
-
+        });
     }
+        /**
+         * Método interno que devuelve la instancia actual de la ventana
+         * @return 
+         */
         private AltaUsuario getThis () {
         return this;
     }

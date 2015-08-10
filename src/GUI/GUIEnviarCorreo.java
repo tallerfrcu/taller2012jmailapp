@@ -9,8 +9,6 @@ import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
 import Excepciones.ExcepcionErrorConexionBD;
 import controladores.ControladorDeFachada;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.CuentaDeCorreo;
 import modelo.Envio;
@@ -23,7 +21,7 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
     /**
      * instancia del controlador de fachada
      */
-    private ControladorDeFachada controladorDeFachada;
+    private final ControladorDeFachada controladorDeFachada;
     /**
      * variable booleana que indica si el correo se guardó correctamente.
      * Se utiliza para indicarle a la GUIPrincipal que se guardó el correo
@@ -36,11 +34,15 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
     private int idCorreoEnviado = 0;
     /**
      * Creates new form GUIEnviarCorreo
+     * @param parent
+     * @param modal
+     * @param cuentaEnvio
      */
     public GUIEnviarCorreo(java.awt.Frame parent, boolean modal, 
             CuentaDeCorreo cuentaEnvio) {
         super(parent, modal);
         initComponents();
+        this.setLocationRelativeTo(null);
         this.cuentaEnvio = cuentaEnvio;
         this.controladorDeFachada = new ControladorDeFachada();
         this.campoOrigen.setText(this.cuentaEnvio.getNombreCuenta() + 
@@ -49,7 +51,7 @@ public class GUIEnviarCorreo extends javax.swing.JDialog {
     /**
      * instancia de la cuenta de correo de la que se está enviando
      */
-    private CuentaDeCorreo cuentaEnvio;
+    private final CuentaDeCorreo cuentaEnvio;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -83,7 +83,7 @@ public class GUICuentaDeCorreo extends JDialog {
      * @param ventanaAlta
      */
 
-    public GUICuentaDeCorreo(AltaUsuario ventanaAlta) {
+    public GUICuentaDeCorreo(JDialog ventanaAlta) {
         //Llamo al constructor de la super clase JFrame, e instancio la
         //ventana con un título
         super(ventanaAlta, "Cuenta de correo", JDialog.DEFAULT_MODALITY_TYPE);

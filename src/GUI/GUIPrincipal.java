@@ -11,15 +11,16 @@ import Excepciones.ExcepcionErrorConexionBD;
 import Excepciones.ExcepcionLogIn;
 import Recursos.utilidades.DatosDeSesion;
 import controladores.ControladorDeFachada;
-import java.awt.event.MouseAdapter;
+import java.awt.FlowLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import modelo.CarpetaCuentaCorreo;
 import modelo.CuentaDeCorreo;
@@ -59,7 +60,6 @@ public class GUIPrincipal extends javax.swing.JFrame {
      *
      */
     private Thread hiloEnviarCorreo;
-
     /**
      * Creates new form GUIPrincipal
      */
@@ -71,9 +71,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
             this.construirListaCorreos();
             this.construirListaCarpetas();
             this.construirTablaMails();
-        } catch (ExcepcionLogIn ex) {
-            JOptionPane.showMessageDialog(null, "no log");
-        } catch (ExcepcionArchivoDePropiedadesNoEncontrado ex) {
+            this.actualizarVentana();
+        } catch (ExcepcionLogIn | ExcepcionArchivoDePropiedadesNoEncontrado ex) {
             JOptionPane.showMessageDialog(null, "no log");
         } catch (ExcepcionErrorConexionBD ex) {
             JOptionPane.showMessageDialog(null, "Error de conexión");
@@ -95,9 +94,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         listaCarpetasCorreo = new javax.swing.JList();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textPreviewCorreo = new javax.swing.JTextArea();
         jToolBar1 = new javax.swing.JToolBar();
-        jPanel1 = new javax.swing.JPanel();
+        panelBotones = new javax.swing.JPanel();
         btnEnviarNuevo = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -141,9 +140,9 @@ public class GUIPrincipal extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(listaCarpetasCorreo);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        textPreviewCorreo.setColumns(20);
+        textPreviewCorreo.setRows(5);
+        jScrollPane3.setViewportView(textPreviewCorreo);
 
         jToolBar1.setRollover(true);
 
@@ -155,18 +154,18 @@ public class GUIPrincipal extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
+        panelBotones.setLayout(panelBotonesLayout);
+        panelBotonesLayout.setHorizontalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnEnviarNuevo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        panelBotonesLayout.setVerticalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBotonesLayout.createSequentialGroup()
                 .addContainerGap(26, Short.MAX_VALUE)
                 .addComponent(btnEnviarNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -208,12 +207,12 @@ public class GUIPrincipal extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jScrollPane4)))
-                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGap(18, 23, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
                             .addComponent(jScrollPane3)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
@@ -235,7 +234,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,7 +288,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             cuenta.setServicio(new ServicioCorreo(1, "@gmail.com"));
             cuenta.setContrasenaCuenta("tallerfrcu123");
             cuenta.setNombreCuenta("tallerfrcu");
-            this.controladorDeFachada.existenCorreosRecibidosNuevos(cuenta);
+            this.controladorDeFachada.actualizarCorreoRecibidos(cuenta);
         } catch (ExcepcionArchivoDePropiedadesNoEncontrado |
                 ExcepcionDeServiciosCorreo | ExcepcionErrorConexionBD ex) {
             System.err.println("Error: " + ex.getMessage());
@@ -305,7 +304,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
             throws ExcepcionLogIn, ExcepcionArchivoDePropiedadesNoEncontrado {
         this.modeloListaCorreos = new DefaultListModel();
         this.listaCuentasDeCorreo.setModel(this.modeloListaCorreos);
-        this.actualizarCorreosUsuario();
+        //this.actualizarCorreosUsuario();
         this.listaCuentasDeCorreo.addMouseListener(new MouseListener() {
 
             @Override
@@ -389,16 +388,17 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private void construirListaCarpetas() {
         this.modeloCarpetasCorreo = new DefaultListModel();
         this.listaCarpetasCorreo.setModel(this.modeloCarpetasCorreo);
-        this.actualizarCarpetas(0);
+        //this.actualizarCarpetas(0);
         this.listaCarpetasCorreo.addMouseListener(new MouseListener() {
 
             @Override
             public void mouseClicked(MouseEvent me) {
                 try {
-                    limpiarTablaMails();
-                    actualizarTablaMails(listaCarpetasCorreo.getAnchorSelectionIndex());
+                    //limpiarTablaMails();
+                    actualizarTablaMails(listaCarpetasCorreo.getSelectedIndex());
                 } catch (ExcepcionErrorConexionBD | ExcepcionArchivoDePropiedadesNoEncontrado ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), 
+                            "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
 
@@ -443,7 +443,7 @@ public class GUIPrincipal extends javax.swing.JFrame {
         this.tablaMails.getColumn("Asunto").setPreferredWidth(80);
         this.tablaMails.getColumn("De").setPreferredWidth(30);
         this.tablaMails.getColumn("Fecha").setPreferredWidth(20);
-        this.actualizarTablaMails(0);
+        //this.actualizarTablaMails(0);
     }
 
     /**
@@ -459,7 +459,8 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private void actualizarTablaMails(int posicionCarpetaSeleccionada)
             throws ExcepcionErrorConexionBD,
             ExcepcionArchivoDePropiedadesNoEncontrado {
-        CarpetaCuentaCorreo carpeta = (CarpetaCuentaCorreo) this.modeloCarpetasCorreo.get(posicionCarpetaSeleccionada);
+        CarpetaCuentaCorreo carpeta = (CarpetaCuentaCorreo) 
+                this.modeloCarpetasCorreo.get(posicionCarpetaSeleccionada);
         carpeta.setListaMails(
                 this.controladorDeFachada.getCorreosDeCarpeta(carpeta));
         Iterator iterador = carpeta.getListaMails().iterator();
@@ -489,6 +490,29 @@ public class GUIPrincipal extends javax.swing.JFrame {
             this.modeloTablaMails.removeRow(i);
         }
     }
+    /**
+     * Método privado que actualiza la ventana para el caso que el usuario 
+     * logueado no tenga cuentas de correo configuradas.
+     */
+    private void actualizarVentana() 
+            throws ExcepcionArchivoDePropiedadesNoEncontrado, ExcepcionLogIn, ExcepcionErrorConexionBD{
+        ArrayList cuentas = (ArrayList) DatosDeSesion.getDatosDeSesion().
+                getUsuarioLogueado().getCuentasCorreo();
+        if(cuentas.isEmpty()) {
+            GUISinCuentasCorreo ventanaSinCuentaCorreo = 
+                    new GUISinCuentasCorreo(this, true);
+            this.setVisible(false);
+            ventanaSinCuentaCorreo.setVisible(true);
+        } else {
+            this.listaCarpetasCorreo.setVisible(true);
+            this.listaCuentasDeCorreo.setVisible(true);
+            this.panelBotones.setVisible(true);
+            this.textPreviewCorreo.setVisible(true);
+            this.actualizarCorreosUsuario();
+            this.actualizarCarpetas(this.listaCuentasDeCorreo.getSelectedIndex());
+            this.actualizarTablaMails(this.listaCarpetasCorreo.getSelectedIndex());
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnviarNuevo;
     private javax.swing.JButton jButton1;
@@ -496,16 +520,16 @@ public class GUIPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JList listaCarpetasCorreo;
     private javax.swing.JList listaCuentasDeCorreo;
+    private javax.swing.JPanel panelBotones;
     private javax.swing.JTable tablaMails;
+    private javax.swing.JTextArea textPreviewCorreo;
     // End of variables declaration//GEN-END:variables
 
 }

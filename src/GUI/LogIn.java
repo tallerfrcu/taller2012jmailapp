@@ -8,13 +8,16 @@ package GUI;
 import Excepciones.ExcepcionArchivoDePropiedadesNoEncontrado;
 import Excepciones.ExcepcionErrorConexionBD;
 import Excepciones.ExcepcionLogIn;
+import Recursos.utilidades.Validador;
 import controladores.ControladorDeFachada;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import javafx.scene.input.KeyCode;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -62,7 +65,11 @@ public class LogIn extends JFrame {
      * ControladorDeFachada} que se utiliza para conectarse con las capas
      * inferiores de la aplicación
      */
-    private ControladorDeFachada controladorDeFachada;
+    private final ControladorDeFachada controladorDeFachada;
+    /**
+     * Instancia de validador usado para validar la entrada de datos del usuario
+     */
+    private Validador validador;
 
     /**
      * Constructor de la clase que inicializa la ventana, instanciando sus
@@ -73,6 +80,7 @@ public class LogIn extends JFrame {
         //ventana con un título
         super("Log In");
         this.controladorDeFachada = new ControladorDeFachada();
+        this.validador = new Validador();
         this.configuracionBasicaVentana();
         this.inicializarComponentes();
     }
@@ -94,8 +102,8 @@ public class LogIn extends JFrame {
      * en la misma. Se utiliza en el constructor.
      */
     private void inicializarComponentes() {
-        this.labelUsuario = new JLabel("USUARIO");
-        this.labelContrasena = new JLabel("CONTRASEÑA");
+        this.labelUsuario = new JLabel("Usuario");
+        this.labelContrasena = new JLabel("Contraseña");
         this.campoUsuario = new JTextField();
         this.campoContrasena = new JPasswordField();
         this.botonLogIn = new JButton("Iniciar Sesión");
@@ -112,31 +120,47 @@ public class LogIn extends JFrame {
         this.campoContrasena.setBounds(130, 110, 130, 20);
         this.botonLogIn.setBounds(20, 170, 120, 25);
         this.botonCrearCuenta.setBounds(150, 170, 120, 25);
-        this.botonLogIn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                loguear();
-            }
+        this.botonLogIn.addActionListener((ActionEvent ae) -> {
+            loguear();
         });
-        this.botonCrearCuenta.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                AltaUsuario ventanaAltaUsuario = new AltaUsuario(getThis());
-                ventanaAltaUsuario.setVisible(true);
-            }
+        this.botonCrearCuenta.addActionListener((ActionEvent ae) -> {
+            AltaUsuario ventanaAltaUsuario = new AltaUsuario(getThis());
+            ventanaAltaUsuario.setVisible(true);
         });
         this.campoContrasena.addKeyListener(new KeyListener() {
 
             @Override
             public void keyTyped(KeyEvent ke) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                     loguear();
                 }
             }
 
             @Override
+            public void keyReleased(KeyEvent ke) {
+            }
+        });
+        this.campoUsuario.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent ke) {
+            }
+            /**
+             * Redefinición del método que se llama al presionar un botón en el
+             * listener del campo usuario. Se observa si se aprieta la tecla
+             * ENTER, de ser así, se ejecuta el loguin a la aplicación.
+             * @param ke 
+             */
+            @Override
             public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+                    loguear();
+                }
             }
 
             @Override
@@ -148,6 +172,7 @@ public class LogIn extends JFrame {
     /**
      * Método que devuelve la instancia actual de la clase. Se utiliza para
      * pasar por parámetro el padre, a las ventanas hijas.
+     *
      * @return La instancia de LogIn
      */
     private LogIn getThis() {
@@ -160,20 +185,33 @@ public class LogIn extends JFrame {
      */
     private void loguear() {
         try {
-            if (controladorDeFachada.loguinUsuario(
-                    campoUsuario.getText(), String.valueOf(
-                            campoContrasena.getPassword()))) {
-                GUIPrincipal ventanaPrincipal = new GUIPrincipal();
-                //dispose();
-                ventanaPrincipal.setVisible(true);
+            ArrayList<JTextField> camposObligatorios
+                    = new ArrayList();
+            camposObligatorios.add(campoUsuario);
+            camposObligatorios.add(campoContrasena);
+            ArrayList<JTextField> camposNoIngresados
+                    = (ArrayList<JTextField>) validador.validarDatosObligatorios(
+                            camposObligatorios);
+            if (camposNoIngresados.isEmpty()) {
+                if (controladorDeFachada.loguinUsuario(
+                        campoUsuario.getText(), String.valueOf(
+                                campoContrasena.getPassword()))) {
+                    GUIPrincipal ventanaPrincipal = new GUIPrincipal();
+                    //dispose();
+                    ventanaPrincipal.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                Iterator iterador = camposNoIngresados.iterator();
+                while (iterador.hasNext()) {
+                    ((JTextField) iterador.next()).setBorder(
+                            BorderFactory.createLineBorder(Color.red));
+                }
+                JOptionPane.showMessageDialog(null, "Los campos en rojo "
+                        + "son obligatorios",
+                        "Error", JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (ExcepcionErrorConexionBD ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(),
-                    "Error", JOptionPane.INFORMATION_MESSAGE);
-        } catch (ExcepcionArchivoDePropiedadesNoEncontrado ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(),
-                    "Error", JOptionPane.INFORMATION_MESSAGE);
-        } catch (ExcepcionLogIn ex) {
+        } catch (ExcepcionErrorConexionBD | ExcepcionArchivoDePropiedadesNoEncontrado | ExcepcionLogIn ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(),
                     "Error", JOptionPane.INFORMATION_MESSAGE);
         }

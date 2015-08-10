@@ -28,4 +28,12 @@ public class ExcepcionErrorConexionBD extends Exception {
             String mensajeError, Exception excepcionOriginal) {
         super(mensajeError, excepcionOriginal);
     }
+    /**
+     * Constructor de la clase que instancia una excepción con un mensaje de 
+     * error
+     * @param mensajeError mensaje de error
+     */
+    public ExcepcionErrorConexionBD(String mensajeError){
+        super(mensajeError);
+    }
 }
